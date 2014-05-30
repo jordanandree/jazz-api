@@ -9,7 +9,7 @@ Check out the [examples](examples) for a sample job listing implementation.
 #### Minimal Example
 
 ```php
-require "resumator-api-php/lib/resumator.php";
+require "resumator-api/lib/resumator.php";
 
 // setup with your API Key
 $resumator = new Resumator("YOUR_API_KEY");
@@ -32,7 +32,7 @@ $new_job = $resumator->postJob($job_fields);
 
 ### Composer
 
-- Add the `jordanandree/resumator-api-php`: `@stable` into the require section of your composer.json.
+- Add the `jordanandree/resumator-api`: `@stable` into the require section of your composer.json.
 - Run `composer install`.
 - The example will look like this:
 
