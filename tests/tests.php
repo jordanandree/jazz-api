@@ -20,15 +20,62 @@ class ResumatorTestCase extends PHPUnit_Framework_TestCase {
   }
 
   /**
-   * @group call
+   * @group request
    */
-  public function testCall() {
-    $resumator = new Resumator();
+  public function testRequest() {
+    $mock = $this->getMockBuilder('Resumator')
+              ->disableOriginalConstructor()
+              ->setMethods(array("apiRequest"))
+              ->getMock();
 
-    $response = $resumator->getJobs();
+    $mock->expects($this->any())
+         ->method('apiRequest');
 
-    $this->assertEquals(gettype($response), "object",
-                        'Expect the response to be an object');
+    $mock->getJobs();
+  }
+
+  /**
+   * @group request_invalid
+   */
+  public function testRequestInvalid() {
+    $mock = $this->getMockBuilder('Resumator')
+              ->disableOriginalConstructor()
+              ->setMethods(array("apiRequest"))
+              ->getMock();
+
+    $this->setExpectedException("Exception");
+
+    $mock->getFoo();
+  }
+
+  /**
+   * @group request_single
+   */
+  public function testRequestSingle() {
+    $mock = $this->getMockBuilder('Resumator')
+              ->disableOriginalConstructor()
+              ->setMethods(array("apiRequest"))
+              ->getMock();
+
+    $mock->expects($this->any())
+         ->method('apiRequest');
+
+    $mock->getJob("job_1234_1234");
+  }
+
+  /**
+   * @group request_post
+   */
+  public function testRequestPost() {
+    $mock = $this->getMockBuilder('Resumator')
+              ->disableOriginalConstructor()
+              ->setMethods(array("apiRequest"))
+              ->getMock();
+
+    $mock->postJob(array("title" => "Open Job"));
+
+    $mock->expects($this->any())
+         ->method('apiRequest');
   }
 
 }

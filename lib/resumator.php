@@ -23,6 +23,60 @@ class Resumator {
   const API_VERSION = "v1";
 
   /**
+   * Endpoints
+   *
+   * More details on endpoints: http://resumatorapi.com/v1/
+   *
+   * @var array
+   */
+  public static $endpoints = array(
+    "activities" => array(
+      "GET"  => "/activity_id"
+    ),
+    "applicants" => array(
+      "GET"  => "/applicant_id",
+      "POST" => "/"
+    ),
+    "applicants2jobs" => array(
+      "GET"  => "/appjob_id",
+      "POST" => "/"
+    ),
+    "categories" => array(
+      "GET"  => "/category_id",
+      "POST" => "/"
+    ),
+    "categories2applicants" => array(
+      "GET"  => "/pro2cat_id",
+      "POST" => "/"
+    ),
+    "contacts" => array(
+      "GET"  => "/contact_id"
+    ),
+    "files" => array(
+      "GET"  => "/file_id",
+      "POST" => "/"
+    ),
+    "jobs" => array(
+      "GET"  => "/job_id",
+      "POST" => "/"
+    ),
+    "notes" => array(
+      "POST" => "/"
+    ),
+    "questionnaire_answers" => array(
+      "POST" => "/"
+    ),
+    "questionnaire_questions" => array(),
+    "tasks" => array(
+      "GET"  => "/task_id"
+    ),
+    "users" => array(
+      "GET"  => "/user_id"
+    )
+  );
+
+
+  /**
    * Default options for curl.
    *
    * @var array
@@ -35,6 +89,8 @@ class Resumator {
 
   /**
    * Stored API Key state
+   *
+   * @var string
    */
   protected $api_key;
 
@@ -47,14 +103,54 @@ class Resumator {
    * @param string $api_key The API Key for your app
    */
   public function __construct($api_key = null) {
-    if( false !== getenv("RESUMATOR_API_KEY") ) {
+    if( !empty(getenv("RESUMATOR_API_KEY")) ) {
       $this->api_key = getenv("RESUMATOR_API_KEY");
     } else {
       $this->api_key = $api_key;
     }
 
-    if(null == $this->api_key)
+    if(empty($this->api_key))
       throw new Exception('Resumator requires an API Key');
+  }
+
+  /**
+   * Intercept methods and map to self::$endpoints
+   *
+   */
+
+  public function __call($method_name, $arguments) {
+    $inflector = new DoctrineInflector();
+    preg_match("/(get|post)/", $method_name, $request_matches);
+
+    $http_method = array_unique($request_matches)[0];
+    $method = strtolower(str_replace($http_method, "", $method_name));
+    $endpoint = $inflector::pluralize($method);
+
+    if( !array_key_exists($endpoint, self::$endpoints) )
+      throw new Exception("Endpoint '/{$method}' does not exist");
+
+    # POST requests
+    if($http_method == "post") {
+      if( empty($arguments) )
+        throw new Exception("POST requests to '/{$endpoint}' requires arguments");
+
+      return $this->apiRequest($endpoint, $arguments, "POST");
+    # GET requests
+    } else {
+
+      # method is different than endpoint (singular) and args exists
+      # probably asking for a single resource
+      if($method !== $endpoint)
+        if(!empty($arguments)) {
+          return $this->apiRequest($endpoint, $arguments[0]);
+        } else {
+          $singular_endoint = self::$endpoints[$endpoint][strtoupper($http_method)];
+          throw new Exception("Endpoint '/{$endpoint}{$singular_endoint}' requires an argument");
+        }
+      else
+        return $this->apiRequest($endpoint);
+    }
+
   }
 
   /**
@@ -67,36 +163,6 @@ class Resumator {
   }
 
   /**
-   * Get a Job by ID (job_xxx_xxx)
-   *
-   * @param string $job_id the Job ID
-   * @return object the Job data object
-   */
-  public function getJob($job_id) {
-    return $this->call(array("jobs", $job_id));
-  }
-
-  /**
-   * Create a Job
-   *
-   * @param array $params parameters for the new Job
-   * @return object the Job data object
-   */
-  public function createJob($params) {
-    return $this->call("jobs", $params, "POST");
-  }
-
-  /**
-   * Get Jobs
-   *
-   * @param array $params parameters for filtering results
-   * @return object the Jobs data object
-   */
-  public function getJobs($params = array()) {
-    return $this->call("jobs", $params);
-  }
-
-  /**
    * Call the API
    *
    * @param mixed $endpoint the API endpoint to request - can be a string or single dimension array
@@ -104,7 +170,7 @@ class Resumator {
    * @param string $http_method the HTTP request method (GET, POST)
    * @return object the request response data
    */
-  private function call($endpoint, $params = array(), $http_method = "GET") {
+  private function apiRequest($endpoint, $params = array(), $http_method = "GET") {
     $ch = curl_init();
     $opts = self::$CURL_OPTS;
 
