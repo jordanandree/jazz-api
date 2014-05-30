@@ -13,6 +13,11 @@ use Doctrine\Common\Inflector\Inflector as DoctrineInflector;
 class Resumator {
 
   /**
+   * Class Version
+   */
+  const VERSION = "0.2.0";
+
+  /**
    * API Base URL
    */
   const API_URL = "https://api.resumatorapi.com/";
