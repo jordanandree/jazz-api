@@ -16,7 +16,7 @@ class Resumator {
   /**
    * Class Version
    */
-  const VERSION = "0.2.1";
+  const VERSION = "0.2.2";
 
   /**
    * API Base URL
@@ -109,7 +109,7 @@ class Resumator {
    * @param string $api_key The API Key for your app
    */
   public function __construct($api_key = null) {
-    if( !empty(getenv("RESUMATOR_API_KEY")) ) {
+    if( "" != getenv("RESUMATOR_API_KEY") ) {
       $this->api_key = getenv("RESUMATOR_API_KEY");
     } else {
       $this->api_key = $api_key;
