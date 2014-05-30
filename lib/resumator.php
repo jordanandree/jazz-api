@@ -8,6 +8,7 @@ if (!function_exists('json_decode')) {
   throw new Exception('Resumator needs the JSON PHP extension.');
 }
 
+require_once "inflector.php";
 use Doctrine\Common\Inflector\Inflector as DoctrineInflector;
 
 class Resumator {
