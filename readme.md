@@ -27,7 +27,7 @@ $job_fields = array(
   "description"    => "Join us!",
   "job_status"     => 2 // draft status
 );
-$new_job = $resumator->createJob($job_fields);
+$new_job = $resumator->postJob($job_fields);
 ```
 
 ### Composer
