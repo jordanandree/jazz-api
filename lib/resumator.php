@@ -111,7 +111,7 @@ class Resumator {
     if( isset($params) ) {
       if( $http_method == "POST" ) {
         $opts[CURLOPT_POST] = count($params);
-        $opts[CURLOPT_POSTFIELDS] = $params_string;
+        $opts[CURLOPT_POSTFIELDS] = http_build_query($params, null, "&");
       } else {
         $url = $this->buildURL($url, $params);
       }
