@@ -128,7 +128,8 @@ class Resumator {
     $inflector = new DoctrineInflector();
     preg_match("/(get|post)/", $method_name, $request_matches);
 
-    $http_method = array_unique($request_matches)[0];
+    $http_method = array_unique($request_matches);
+    $http_method = $http_method[0];
     $method = strtolower(str_replace($http_method, "", $method_name));
     $endpoint = $inflector::pluralize($method);
 
