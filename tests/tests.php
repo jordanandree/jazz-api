@@ -249,6 +249,20 @@ class ResumatorTestCase extends PHPUnit_Framework_TestCase {
   }
 
   /**
+   * @group tasks
+   */
+  public function testTasks() {
+    $this->mock->getTasks();
+  }
+
+  /**
+   * @group tasks
+   */
+  public function testTask() {
+    $this->mock->getTask("task_id");
+  }
+
+  /**
    * @group users
    */
   public function testUsers() {
