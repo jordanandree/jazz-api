@@ -1,5 +1,7 @@
 # Resumator API PHP
 
+[![Build Status](https://travis-ci.org/jordanandree/resumator-api.svg?branch=master)](https://travis-ci.org/jordanandree/resumator-api)
+
 PHP API wrapper for the [Resumator API](http://www.resumatorapi.com/).
 
 # Usage
