@@ -225,27 +225,24 @@ class ResumatorTestCase extends PHPUnit_Framework_TestCase {
    * @group questionnaire_answers
    */
   public function testQuestionnaireAnswers() {
-    $this->markTestIncomplete(
-      'This test has not been implemented yet.'
-    );
+    $this->mock->getQuestionnaireAnswers();
   }
 
   /**
    * @group questionnaire_answers
    */
   public function testPostQuestionnaireAnswer() {
-    $this->markTestIncomplete(
-      'This test has not been implemented yet.'
-    );
+    $this->mock->postQuestionnaireAnswer(array(
+      "applicant_id" => "foo",
+      "questionnaire_id" => "foo"
+    ));
   }
 
   /**
    * @group questionnaire_questions
    */
   public function testQuestionnaireQuestions() {
-    $this->markTestIncomplete(
-      'This test has not been implemented yet.'
-    );
+    $this->mock->getQuestionnaireQuestions();
   }
 
   /**

@@ -130,7 +130,9 @@ class Resumator {
 
     $http_method = array_unique($request_matches);
     $http_method = $http_method[0];
-    $method = strtolower(str_replace($http_method, "", $method_name));
+
+    $method = str_replace($http_method, "", $method_name);
+    $method = strtolower(preg_replace('/(?<!^)(?<!\d)([A-Z])/', '_$1', $method));
     $endpoint = $inflector::pluralize($method);
 
     if( !array_key_exists($endpoint, self::$endpoints) )
