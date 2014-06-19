@@ -149,15 +149,16 @@ class Resumator {
 
       # method is different than endpoint (singular) and args exists
       # probably asking for a single resource
-      if($method !== $endpoint)
-        if(!empty($arguments)) {
-          return $this->apiRequest($endpoint, $arguments[0]);
-        } else {
-          $singular_endoint = self::$endpoints[$endpoint][strtoupper($http_method)];
-          throw new Exception("Endpoint '/{$endpoint}{$singular_endoint}' requires an argument");
-        }
-      else
+      if($method !== $endpoint && empty($arguments)) {
+        $singular_endoint = self::$endpoints[$endpoint][strtoupper($http_method)];
+        throw new Exception("Endpoint '/{$endpoint}{$singular_endoint}' requires an argument");
+      }
+
+      if(!empty($arguments)) {
+        return $this->apiRequest($endpoint, $arguments[0]);
+      } else {
         return $this->apiRequest($endpoint);
+      }
     }
 
   }

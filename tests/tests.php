@@ -45,6 +45,15 @@ class ResumatorTestCase extends PHPUnit_Framework_TestCase {
   }
 
   /**
+   * @group request_invalid
+   */
+  public function testInvalidParams() {
+    $this->setExpectedException("Exception");
+
+    $this->mock->postJob();
+  }
+
+  /**
    * @group activity
    */
   public function testGetActivity() {
