@@ -143,7 +143,7 @@ class Resumator {
       if( empty($arguments) )
         throw new Exception("POST requests to '/{$endpoint}' requires arguments");
 
-      return $this->apiRequest($endpoint, $arguments, "POST");
+      return $this->apiRequest($endpoint, $arguments[0], "POST");
     # GET requests
     } else {
 
@@ -188,8 +188,10 @@ class Resumator {
 
     if( isset($params) ) {
       if( $http_method == "POST" ) {
+        $params['apikey'] = $this->getApiKey();
         $opts[CURLOPT_POST] = count($params);
-        $opts[CURLOPT_POSTFIELDS] = http_build_query($params, null, "&");
+        $opts[CURLOPT_POSTFIELDS] = json_encode($params);
+        $opts[CURLOPT_HTTPHEADER] = array('Content-Type: application/json');
       } else {
         $url = $this->buildURL($url, $params);
       }
