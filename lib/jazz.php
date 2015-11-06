@@ -104,7 +104,7 @@ class Jazz {
    */
   public $cache = array(
     "ENABLED" => true,
-    "PATH"    => __DIR__ . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR,
+    "PATH"    => "./cache/",
     "EXPIRES" => 86400 // 86400 = 24hrs
   );
 
