@@ -126,7 +126,9 @@ class Resumator {
       throw new Exception('Resumator requires an API Key');
 
     // Create cache directory if not exists
-    mkdir($this->cache['PATH'], 0755, true);
+    if(!is_dir($this->cache['PATH'])) {
+      mkdir($this->cache['PATH'], 0755, true);
+    }
   }
 
   /**
