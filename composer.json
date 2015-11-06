@@ -7,6 +7,10 @@
         {
             "name": "Jordan Andree",
             "email": "jordanandree@gmail.com"
+        },
+        {
+            "name": "Rob Widdick",
+            "email": "rob@robwiddick.com"
         }
     ],
     "minimum-stability": "stable",

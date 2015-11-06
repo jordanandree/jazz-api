@@ -1,6 +1,4 @@
 <?php
-
-
 if (!function_exists('curl_init')) {
   throw new Exception('Jazz needs the CURL PHP extension.');
 }
@@ -81,7 +79,6 @@ class Jazz {
     )
   );
 
-
   /**
    * Default options for curl.
    *
@@ -99,6 +96,16 @@ class Jazz {
    * @var string
    */
   protected $api_key;
+
+  /**
+   * Cache configuration
+   *
+   * @var array CACHE_PATH: the absolute path to store cache files, CACHE_EXPIRE: cache validity (in seconds)
+   */
+  protected static $cache = array(
+    "CACHE_PATH"   => __DIR__ . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR,
+    "CACHE_EXPIRE" => 86400 // 86400 = 24hrs
+  );
 
   /**
    * Initialize a Jazz instance.
@@ -123,7 +130,6 @@ class Jazz {
    * Intercept methods and map to self::$endpoints
    *
    */
-
   public function __call($method_name, $arguments) {
     $inflector = new DoctrineInflector();
     preg_match("/(get|post)/", $method_name, $request_matches);
@@ -146,7 +152,6 @@ class Jazz {
       return $this->apiRequest($endpoint, $arguments[0], "POST");
     # GET requests
     } else {
-
       # method is different than endpoint (singular) and args exists
       # probably asking for a single resource
       if($method !== $endpoint && empty($arguments)) {
@@ -181,10 +186,22 @@ class Jazz {
    * @return object the request response data
    */
   private function apiRequest($endpoint, $params = array(), $http_method = "GET") {
+    $url = $this->buildURL(self::API_URL . self::API_VERSION, $endpoint);
+
+    /**
+     * Only allow caching for GET requests
+     */
+    if($http_method == "GET") {
+      // dynamic cache filename from sha1 hash
+      $cacheFile = sha1($url . json_encode($params));
+      $cache = $this->readCache($cacheFile);
+      if ($cache) {
+        return json_decode($cache);
+      }
+    }
+
     $ch = curl_init();
     $opts = self::$CURL_OPTS;
-
-    $url = $this->buildURL(self::API_URL . self::API_VERSION, $endpoint);
 
     if( isset($params) ) {
       if( $http_method == "POST" ) {
@@ -202,14 +219,14 @@ class Jazz {
     curl_setopt_array($ch, $opts);
     $result = curl_exec($ch);
     $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
 
-    if( $status !== 200 ) {
-      return @json_decode($result);
-    } else {
-      return @json_decode($result);
+    /** Write cache only for GET request */
+    if($http_method == "GET") {
+      $this->writeCache($cacheFile, $result);
     }
 
-    curl_close($ch);
+    return @json_decode($result);
   }
 
   /**
@@ -219,7 +236,6 @@ class Jazz {
    * @param mixed $endpoint a string, normal, or associative array of endpoints
    * @return string the formatted url
    */
-
   private function buildURL($base, $endpoint) {
     $return_url = $base;
     if( gettype($endpoint) == "string") {
@@ -237,4 +253,42 @@ class Jazz {
     return $return_url;
   }
 
+  /**
+   * Read the cache file, if it exists and within the expiration time
+   *
+   * @param bool|false $file the filename, without extension
+   * @return bool|string the cached data, or false on failure
+   */
+  private function readCache($file = false) {
+    $cache = self::$cache['CACHE_PATH'] . $file . ".cache";
+    if(file_exists($cache)) {
+      if(filemtime($cache) > time() - self::$cache['CACHE_EXPIRE']) {
+        // Returned cached data
+        $data = @file_get_contents($cache);
+        return $data;
+      } else {
+        // Attempt to delete the cache file
+        @unlink($cache);
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Write to the specified cache file
+   *
+   * @param bool|false $file the filename, without extension
+   * @param string $data the data to write
+   * @return bool the result of the write
+   */
+  private function writeCache($file = false, $data = "") {
+    $cache = self::$cache['CACHE_PATH'] . $file . ".cache";
+    $fp = fopen($cache, "w");
+    if($fp) {
+      $result = fwrite($fp, $data);
+      fclose($fp);
+      return $result;
+    }
+    return false;
+  }
 }
