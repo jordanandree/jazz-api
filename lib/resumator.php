@@ -99,11 +99,12 @@ class Resumator {
   /**
    * Cache configuration
    *
-   * @var array CACHE_PATH: the absolute path to store cache files, CACHE_EXPIRE: cache validity (in seconds)
+   * @var array ENABLED: use caching?, PATH: the absolute path to store cache files, EXPIRES: cache validity (in seconds)
    */
-  protected static $cache = array(
-    "CACHE_PATH"   => __DIR__ . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR,
-    "CACHE_EXPIRE" => 86400 // 86400 = 24hrs
+  public $cache = array(
+    "ENABLED" => true,
+    "PATH"    => __DIR__ . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR,
+    "EXPIRES" => 86400 // 86400 = 24hrs
   );
 
   /**
@@ -190,7 +191,7 @@ class Resumator {
     /**
      * Only allow caching for GET requests
      */
-    if($http_method == "GET") {
+    if($this->cache['ENABLED'] && $http_method == "GET") {
       // dynamic cache filename from sha1 hash
       $cacheFile = sha1($url . json_encode($params));
       $cache = $this->readCache($cacheFile);
@@ -221,7 +222,7 @@ class Resumator {
     curl_close($ch);
 
     /** Write cache only for GET request */
-    if($http_method == "GET") {
+    if($this->cache['ENABLED'] && $http_method == "GET") {
       $this->writeCache($cacheFile, $result);
     }
 
@@ -259,9 +260,9 @@ class Resumator {
    * @return bool|string the cached data, or false on failure
    */
   private function readCache($file = false) {
-    $cache = self::$cache['CACHE_PATH'] . $file . ".cache";
+    $cache = $this->cache['PATH'] . $file . ".cache";
     if(file_exists($cache)) {
-      if(filemtime($cache) > time() - self::$cache['CACHE_EXPIRE']) {
+      if(filemtime($cache) > time() - $this->cache['EXPIRES']) {
         // Returned cached data
         $data = @file_get_contents($cache);
         return $data;
@@ -281,7 +282,7 @@ class Resumator {
    * @return bool the result of the write
    */
   private function writeCache($file = false, $data = "") {
-    $cache = self::$cache['CACHE_PATH'] . $file . ".cache";
+    $cache = $this->cache['PATH'] . $file . ".cache";
     $fp = fopen($cache, "w");
     if($fp) {
       $result = fwrite($fp, $data);
