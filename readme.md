@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/jordanandree/jazz-api.svg?branch=master)](https://travis-ci.org/jordanandree/jazz-api)
 
-PHP API wrapper for the [Jazz API](http://www.jazzapi.com/).
+PHP API wrapper for the [Jazz API](http://www.resumatorapi.com/).
 
 # Usage
 
