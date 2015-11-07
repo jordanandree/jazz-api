@@ -1,11 +1,11 @@
 <?php
 
-class ResumatorTestCase extends PHPUnit_Framework_TestCase {
+class JazzTestCase extends PHPUnit_Framework_TestCase {
 
   const API_KEY = "YOUR_API_KEY";
 
   protected function setUp() {
-    $this->mock = $this->getMockBuilder('Resumator')
+    $this->mock = $this->getMockBuilder('Jazz')
               ->disableOriginalConstructor()
               ->setMethods(array("apiRequest"))
               ->getMock();
@@ -17,15 +17,15 @@ class ResumatorTestCase extends PHPUnit_Framework_TestCase {
    * @group constructor
    */
   public function testConstructor() {
-    $resumator = new Resumator(self::API_KEY);
-    $this->assertEquals($resumator->getApiKey(), self::API_KEY,
+    $jazz = new Jazz(self::API_KEY);
+    $this->assertEquals($jazz->getApiKey(), self::API_KEY,
                         'Expect the API Key to be set.');
 
-    putenv("RESUMATOR_API_KEY=" . self::API_KEY);
-    $resumator = new Resumator();
-    $this->assertEquals($resumator->getApiKey(), self::API_KEY,
+    putenv("JAZZ_API_KEY=" . self::API_KEY);
+    $jazz = new Jazz();
+    $this->assertEquals($jazz->getApiKey(), self::API_KEY,
                         'Expect the API Key to be set through env vars.');
-    putenv("RESUMATOR_API_KEY=");
+    putenv("JAZZ_API_KEY=");
   }
 
   /**

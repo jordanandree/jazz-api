@@ -2,16 +2,16 @@
 
 
 if (!function_exists('curl_init')) {
-  throw new Exception('Resumator needs the CURL PHP extension.');
+  throw new Exception('Jazz needs the CURL PHP extension.');
 }
 if (!function_exists('json_decode')) {
-  throw new Exception('Resumator needs the JSON PHP extension.');
+  throw new Exception('Jazz needs the JSON PHP extension.');
 }
 
 require_once "inflector.php";
 use Doctrine\Common\Inflector\Inflector as DoctrineInflector;
 
-class Resumator {
+class Jazz {
 
   /**
    * Class Version
@@ -101,22 +101,22 @@ class Resumator {
   protected $api_key;
 
   /**
-   * Initialize a Resumator instance.
+   * Initialize a Jazz instance.
    *
    * API can be set by passing the $api_key param or
-   * by setting the environment variable `RESUMATOR_API_KEY`
+   * by setting the environment variable `JAZZ_API_KEY`
    *
    * @param string $api_key The API Key for your app
    */
   public function __construct($api_key = null) {
-    if( "" != getenv("RESUMATOR_API_KEY") ) {
-      $this->api_key = getenv("RESUMATOR_API_KEY");
+    if( "" != getenv("JAZZ_API_KEY") ) {
+      $this->api_key = getenv("JAZZ_API_KEY");
     } else {
       $this->api_key = $api_key;
     }
 
     if(empty($this->api_key))
-      throw new Exception('Resumator requires an API Key');
+      throw new Exception('Jazz requires an API Key');
   }
 
   /**

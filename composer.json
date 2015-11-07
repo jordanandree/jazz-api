@@ -1,6 +1,6 @@
 {
-    "name": "jordanandree/resumator-api",
-    "description": "Resumator API PHP Wrapper",
+    "name": "jordanandree/jazz-api",
+    "description": "Jazz (Resumator) API PHP Wrapper",
     "type": "library",
     "license": "MIT",
     "authors": [

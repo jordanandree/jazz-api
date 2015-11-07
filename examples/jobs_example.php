@@ -1,10 +1,10 @@
 <?php
 
-require "../lib/resumator.php";
+require "../lib/jazz.php";
 
-$resumator = new Resumator("YOUR_API_KEY");
-$subdomain = "mycompanyname"; // subdomain for you company resumator domain
-$jobs = $resumator->getJobs(array(
+$jazz = new Jazz("YOUR_API_KEY");
+$subdomain = "mycompanyname"; // subdomain for you company jazz domain
+$jobs = $jazz->getJobs(array(
   "status" => "open", // open jobs
 ));
 
@@ -13,7 +13,7 @@ $jobs = $resumator->getJobs(array(
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Open Jobs - Resumator PHP API Example</title>
+  <title>Open Jobs - Jazz PHP API Example</title>
   <style type="text/css">
   body {
     font: 18px/32px "Helvetica Neue", Helvetica, Arial, Sans-serif;
@@ -52,7 +52,7 @@ $jobs = $resumator->getJobs(array(
 
   <section class='wrapper'>
 
-    <h1>Open Jobs - Resumator PHP API Example</h1>
+    <h1>Open Jobs - Jazz PHP API Example</h1>
 
     <?php foreach($jobs as $job): ?>
       <article id="<?php echo $job->board_code ?>">
@@ -60,7 +60,7 @@ $jobs = $resumator->getJobs(array(
         <em>Department: <?php echo $job->department ?></em>
         <p><?php echo $job->description ?></p>
         <p>
-          <a class='button' href="http://<?php echo $subdomain ?>.theresumator.com/apply/<?php echo $job->board_code; ?>">
+          <a class='button' href="http://<?php echo $subdomain ?>.thejazz.com/apply/<?php echo $job->board_code; ?>">
             Apply Now
           </a>
         </p>
