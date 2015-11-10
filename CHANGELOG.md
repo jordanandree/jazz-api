@@ -1,3 +1,6 @@
+# 0.4.0
+- add file system caching support (thanks [robertark](https://github.com/robertark))
+
 # 0.3.0
 
 - rename package to jazz-api to follow resumator company name change
