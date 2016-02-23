@@ -42,22 +42,22 @@ The caching mechanism can be configured and toggled on or off prior to making an
 **Examples:**
 
 ```php
-require "resumator-api/lib/resumator.php";
+require "jazz-api/lib/jazz.php";
 
 // setup with your API Key
-$resumator = new Resumator("YOUR_API_KEY");
+$jazz = new Jazz("YOUR_API_KEY");
 
 // set the default caching cache file expiration time (in seconds)
-$resumator->cache['EXPIRES'] = 604800; // 1 week
+$jazz->cache['EXPIRES'] = 604800; // 1 week
 
 // set the cache file save path
-$resumator->cache['PATH'] = __DIR__ . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR;
+$jazz->cache['PATH'] = __DIR__ . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR;
 
 // disable caching
-$resumator->cache['ENABLED'] = false;
+$jazz->cache['ENABLED'] = false;
 
 // enable caching
-$resumator->cache['ENABLED'] = true;
+$jazz->cache['ENABLED'] = true;
 
 ```
 
